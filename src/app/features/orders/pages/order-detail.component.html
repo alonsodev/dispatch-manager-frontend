@@ -1,0 +1,162 @@
+<div class="order-detail-container" *ngIf="order">
+    <!-- Header -->
+    <div class="order-detail-header">
+    <div class="header-content">
+        <h1 class="page-title">
+        <mat-icon class="title-icon">assignment</mat-icon>
+        Orden #{{ order.id.substring(0, 8) }}
+        </h1>
+        <div class="order-meta">
+        <mat-chip [class]="'status-chip status-' + order.status">
+            {{ getStatusLabel(order.status) }}
+        </mat-chip>
+        <span class="created-date">
+            Creada el {{ formatDateTime(order.createdAt) }}
+        </span>
+        </div>
+    </div>
+    
+    <div class="header-actions">
+        <button 
+        mat-stroked-button 
+        (click)="goBack()"
+        class="action-btn">
+        <mat-icon>arrow_back</mat-icon>
+        Volver
+        </button>
+        
+        <button 
+        mat-button 
+        [matMenuTriggerFor]="actionsMenu"
+        class="action-btn">
+        <mat-icon>more_vert</mat-icon>
+        Acciones
+        </button>
+    </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="order-content">
+    <!-- Información del Cliente y Producto -->
+    <div class="info-section">
+        <mat-card class="info-card">
+        <mat-card-header>
+            <mat-icon mat-card-avatar>person</mat-icon>
+            <mat-card-title>Información del Cliente</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="info-item">
+            <span class="info-label">Nombre:</span>
+            <span class="info-value">{{ order.customerName }}</span>
+            </div>
+        </mat-card-content>
+        </mat-card>
+
+        <mat-card class="info-card">
+        <mat-card-header>
+            <mat-icon mat-card-avatar>inventory</mat-icon>
+            <mat-card-title>Información del Producto</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="info-item">
+            <span class="info-label">Producto:</span>
+            <span class="info-value">{{ order.productName }}</span>
+            </div>
+            <div class="info-item">
+            <span class="info-label">Cantidad:</span>
+            <span class="info-value">{{ order.quantity }}</span>
+            </div>
+        </mat-card-content>
+        </mat-card>
+    </div>
+
+    <!-- Información de Ubicaciones -->
+    <mat-card class="location-card">
+        <mat-card-header>
+        <mat-icon mat-card-avatar>map</mat-icon>
+        <mat-card-title>Ruta de Despacho</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+        <div class="location-info">
+            <div class="location-item origin">
+            <mat-icon class="location-icon">radio_button_checked</mat-icon>
+            <div class="location-details">
+                <span class="location-label">Origen</span>
+                <span class="coordinates">{{ formatCoordinate(order.origin) }}</span>
+            </div>
+            </div>
+
+            <div class="route-line"></div>
+
+            <div class="location-item destination">
+            <mat-icon class="location-icon">location_on</mat-icon>
+            <div class="location-details">
+                <span class="location-label">Destino</span>
+                <span class="coordinates">{{ formatCoordinate(order.destination) }}</span>
+            </div>
+            </div>
+        </div>
+        </mat-card-content>
+    </mat-card>
+
+    <!-- Cálculos -->
+    <mat-card class="calculations-card">
+        <mat-card-header>
+        <mat-icon mat-card-avatar>calculate</mat-icon>
+        <mat-card-title>Cálculos de Envío</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+        <div class="calculations-grid">
+            <div class="calc-item">
+            <span class="calc-label">Distancia</span>
+            <span class="calc-value">{{ order.distanceKm | number:'1.2-2' }} km</span>
+            </div>
+            
+            <div class="calc-item">
+            <span class="calc-label">Intervalo</span>
+            <mat-chip class="interval-chip">{{ order.distanceInterval }}</mat-chip>
+            </div>
+            
+            <div class="calc-item">
+            <span class="calc-label">Costo Total</span>
+            <span class="calc-value cost-value">\${{ order.costAmount | number:'1.2-2' }} {{ order.costCurrency }}</span>
+            </div>
+        </div>
+        </mat-card-content>
+    </mat-card>
+    </div>
+
+    <!-- Menú de Acciones -->
+    <mat-menu #actionsMenu="matMenu">
+    <button mat-menu-item (click)="editOrder()">
+        <mat-icon>edit</mat-icon>
+        Editar Estado
+    </button>
+    <button mat-menu-item (click)="downloadPdf()">
+        <mat-icon>download</mat-icon>
+        Descargar PDF
+    </button>
+    <mat-divider></mat-divider>
+    <button mat-menu-item (click)="duplicateOrder()">
+        <mat-icon>content_copy</mat-icon>
+        Duplicar Orden
+    </button>
+    </mat-menu>
+</div>
+
+<!-- Loading State -->
+<div *ngIf="!order && isLoading" class="loading-container">
+    <mat-icon class="loading-icon">hourglass_empty</mat-icon>
+    <p>Cargando detalles de la orden...</p>
+</div>
+
+<!-- Error State -->
+<div *ngIf="!order && !isLoading" class="error-container">
+    <mat-icon class="error-icon">error_outline</mat-icon>
+    <h3>Orden no encontrada</h3>
+    <p>La orden solicitada no existe o no tienes permisos para verla</p>
+    <button mat-raised-button color="primary" (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon>
+    Volver a Órdenes
+    </button>
+</div>

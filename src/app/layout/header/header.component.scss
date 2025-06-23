@@ -1,0 +1,542 @@
+
+// ================================================================================
+// HEADER COMPONENT - JONATHAN IVE STYLE
+// "Less but better" - Elegancia minimalista
+// ================================================================================
+app-header {
+ width: 100% !important;
+ .app-header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 64px; // Altura optimizada para touch y desktop
+    padding: 0 var(--spacing-lg);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    position: relative;
+    
+    // Micro-interacción: resplandor sutil
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(255, 255, 255, 0.1) 50%, 
+        transparent 100%
+      );
+    }
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // SECCIÓN IZQUIERDA: MENÚ + LOGO
+  // ══════════════════════════════════════════════════════════════════════════════
+
+  .app-header-left {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    flex: 0 0 auto;
+  }
+
+  .app-menu-btn {
+    width: 48px !important;
+    height: 48px !important;
+    border-radius: var(--radius-lg) !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    backdrop-filter: blur(10px);
+    transition: var(--transition-base) !important;
+    
+    mat-icon {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+      color: var(--color-text-inverse);
+    }
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.15) !important;
+      border-color: rgba(255, 255, 255, 0.2) !important;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  .app-logo {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    text-decoration: none;
+    transition: var(--transition-base);
+    
+    &:hover {
+      transform: translateY(-1px);
+    }
+    
+    .app-logo-icon {
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+      color: var(--color-text-inverse);
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    }
+    
+    .app-logo-text {
+      font-family: var(--font-family-display);
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-inverse);
+      letter-spacing: var(--letter-spacing-tight);
+      line-height: var(--line-height-tight);
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      
+      // Responsive: ocultar en móvil
+      @media (max-width: 640px) {
+        display: none;
+      }
+    }
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // SECCIÓN DERECHA: NOTIFICACIONES + USUARIO
+  // ══════════════════════════════════════════════════════════════════════════════
+
+  .app-header-right {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    flex: 0 0 auto;
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // NUEVO: BOTÓN DE INVALIDAR CACHÉ - DISEÑO JONATHAN IVE
+  // ══════════════════════════════════════════════════════════════════════════════
+
+  .app-cache-btn {
+    width: 48px !important;
+    height: 48px !important;
+    border-radius: var(--radius-lg) !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: blur(10px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    
+    // Estado normal
+    &:not([disabled]) {
+      &:hover {
+        background: rgba(255, 255, 255, 0.15) !important;
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 
+          0 12px 35px rgba(0, 0, 0, 0.2),
+          0 0 0 1px rgba(255, 255, 255, 0.1);
+      }
+      
+      &:active {
+        transform: translateY(-1px) scale(0.98);
+        transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+    }
+    
+    // Estado deshabilitado (mientras carga)
+    &[disabled] {
+      background: rgba(255, 255, 255, 0.05) !important;
+      cursor: not-allowed;
+      
+      .cache-loading {
+        animation: cacheSpinning 1.2s linear infinite;
+      }
+    }
+    
+    // Iconos
+    .cache-icon {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 22px;
+      width: 22px;
+      height: 22px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .cache-loading {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 22px;
+      width: 22px;
+      height: 22px;
+    }
+    
+    // Efecto de resplandor al hacer hover
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 0.3) 0%,
+        transparent 70%
+      );
+      transform: translate(-50%, -50%);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
+    }
+    
+    &:hover::before {
+      width: 100px;
+      height: 100px;
+    }
+  }
+
+  .app-notification-btn {
+    position: relative;
+    width: 48px !important;
+    height: 48px !important;
+    border-radius: var(--radius-lg) !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    transition: var(--transition-base) !important;
+    
+    mat-icon {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+      color: var(--color-text-inverse);
+    }
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.15) !important;
+      border-color: rgba(255, 255, 255, 0.2) !important;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  .app-notification-badge {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    background: linear-gradient(135deg, var(--color-error) 0%, #ff6b5a 100%);
+    color: var(--color-text-inverse);
+    border: 2px solid var(--color-text-inverse);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    min-width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    box-shadow: 0 2px 8px rgba(255, 59, 48, 0.4);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+  }
+
+  .app-user-menu {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-full);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    transition: var(--transition-base);
+    color: var(--color-text-inverse);
+    min-height: 44px;
+    
+    // SOLUCIÓN CRÍTICA: Forzar texto en una línea
+    white-space: nowrap !important;
+    
+    // Override específico para mdc-button__label
+    .mdc-button__label {
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: var(--spacing-sm) !important;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  .app-user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    min-width: 0; // CRÍTICO: Permite que flex-shrink funcione
+    flex-shrink: 1; // Permite que se contraiga si es necesario
+    
+    .app-user-name {
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-inverse);
+      line-height: 1.2;
+      white-space: nowrap; // CRÍTICO: Una sola línea
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 120px; // Límite máximo para evitar problemas
+    }
+    
+    .app-user-role {
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-regular);
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.2;
+      letter-spacing: var(--letter-spacing-wide);
+      text-transform: uppercase;
+      white-space: nowrap; // CRÍTICO: Una sola línea
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 120px; // Límite máximo
+    }
+  }
+
+  .app-user-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, 
+      rgba(255, 255, 255, 0.2) 0%, 
+      rgba(255, 255, 255, 0.1) 100%
+    );
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    overflow: hidden;
+    
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      color: var(--color-text-inverse);
+    }
+  }
+
+  .app-dropdown-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: rgba(255, 255, 255, 0.7);
+    transition: var(--transition-base);
+    
+    .app-user-menu:hover & {
+      color: var(--color-text-inverse);
+      transform: rotate(180deg);
+    }
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // DROPDOWN MENU STYLES - REFINAMIENTO TOTAL
+  // ══════════════════════════════════════════════════════════════════════════════
+
+  ::ng-deep .app-user-dropdown {
+    .mat-mdc-menu-panel {
+      border-radius: var(--radius-xl) !important;
+      box-shadow: var(--shadow-2xl) !important;
+      border: 1px solid var(--color-border-light) !important;
+      min-width: 220px !important;
+      margin-top: var(--spacing-sm) !important;
+      backdrop-filter: blur(20px);
+      background: rgba(255, 255, 255, 0.95) !important;
+      overflow: hidden;
+      
+      // Efecto glassmorphism
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, 
+          rgba(255, 255, 255, 0.1) 0%, 
+          rgba(255, 255, 255, 0.05) 100%
+        );
+        pointer-events: none;
+      }
+    }
+    
+    .mat-mdc-menu-item {
+      font-family: var(--font-family) !important;
+      font-size: var(--font-size-sm) !important;
+      font-weight: var(--font-weight-medium) !important;
+      color: var(--color-text-primary) !important;
+      padding: var(--spacing-md) var(--spacing-lg) !important;
+      min-height: 48px !important;
+      border-radius: var(--radius-md) !important;
+      margin: var(--spacing-xs) var(--spacing-sm) !important;
+      transition: var(--transition-base) !important;
+      
+      &:hover {
+        background: var(--color-background-secondary) !important;
+        transform: translateX(4px);
+      }
+      
+      &:active {
+        transform: translateX(2px);
+      }
+      
+      // Item de logout especial
+      &.logout-item {
+        color: var(--color-error) !important;
+        margin-top: var(--spacing-sm) !important;
+        border-top: 1px solid var(--color-border-light);
+        
+        &:hover {
+          background: var(--color-error-light) !important;
+        }
+        
+        mat-icon {
+          color: var(--color-error) !important;
+        }
+      }
+      
+      mat-icon {
+        margin-right: var(--spacing-md) !important;
+        font-size: 20px !important;
+        width: 20px !important;
+        height: 20px !important;
+        color: var(--color-text-secondary) !important;
+        transition: var(--transition-base) !important;
+      }
+      
+      &:hover mat-icon {
+        color: var(--color-accent) !important;
+      }
+    }
+    
+    // Separadores elegantes
+    .mat-mdc-menu-divider {
+      margin: var(--spacing-sm) var(--spacing-md) !important;
+      border-color: var(--color-border-light) !important;
+    }
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // RESPONSIVE DESIGN
+  // ══════════════════════════════════════════════════════════════════════════════
+
+  @media (max-width: 768px) {
+    .app-header-content {
+      padding: 0 var(--spacing-md);
+      height: 56px; // Altura móvil optimizada
+    }
+    
+    .app-header-left {
+      gap: var(--spacing-md);
+    }
+    
+    .app-header-right {
+      gap: var(--spacing-sm);
+    }
+    
+    .app-menu-btn,
+    .app-cache-btn,
+    .app-notification-btn {
+      width: 44px !important;
+      height: 44px !important;
+    }
+    
+    .app-user-menu {
+      padding: var(--spacing-xs);
+      min-height: 44px;
+      
+      .app-user-avatar {
+        width: 32px;
+        height: 32px;
+        
+        mat-icon {
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
+        }
+      }
+    }
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // ANIMACIONES SUTILES
+  // ══════════════════════════════════════════════════════════════════════════════
+
+  // Entrada del header
+  .app-header-content {
+    animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // ESTADOS DE FOCUS PARA ACCESIBILIDAD
+  // ══════════════════════════════════════════════════════════════════════════════
+
+  .app-menu-btn,
+  .app-cache-btn,
+  .app-notification-btn,
+  .app-user-menu {
+    &:focus {
+      outline: 2px solid rgba(255, 255, 255, 0.8) !important;
+      outline-offset: 2px !important;
+    }
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // DARK MODE PREPARATION
+  // ══════════════════════════════════════════════════════════════════════════════
+
+  @media (prefers-color-scheme: dark) {
+    // Se implementará en fases posteriores
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // PRINT STYLES
+  // ══════════════════════════════════════════════════════════════════════════════
+
+  @media print {
+    .app-header-content {
+      display: none !important;
+    }
+  }
+}

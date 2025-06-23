@@ -1,0 +1,411 @@
+// Custom Theming for Angular Material
+@use '@angular/material' as mat;
+
+// Configuración Material Design
+html {
+  @include mat.theme((
+    color: (
+      theme-type: light,
+      primary: mat.$azure-palette,
+      tertiary: mat.$blue-palette,
+    ),
+    typography: (
+      brand-family: 'SF Pro Display, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif',
+      plain-family: 'SF Pro Text, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif'
+    ),
+    density: 0,
+  ));
+}
+
+// ================================================================================
+// VARIABLES DE DISEÑO JONATHAN IVE
+// ================================================================================
+
+:root {
+  // ══════════════════════════════════════════════════════════════════════════════
+  // TIPOGRAFÍA PREMIUM
+  // ══════════════════════════════════════════════════════════════════════════════
+  --font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', sans-serif;
+  --font-family-display: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', sans-serif;
+  --font-family-mono: 'SF Mono', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  
+  // Font Weights - Precisión quirúrgica
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  // Font Sizes - Escala armónica
+  --font-size-xs: 11px;
+  --font-size-sm: 13px;
+  --font-size-base: 15px;
+  --font-size-md: 17px;
+  --font-size-lg: 20px;
+  --font-size-xl: 24px;
+  --font-size-2xl: 32px;
+  --font-size-3xl: 40px;
+  
+  // Line Heights - Respiración perfecta
+  --line-height-tight: 1.2;
+  --line-height-base: 1.4;
+  --line-height-relaxed: 1.6;
+  --line-height-loose: 1.8;
+  
+  // Letter Spacing - Refinamiento óptico
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.02em;
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // PALETA DE COLORES MINIMALISTA
+  // ══════════════════════════════════════════════════════════════════════════════
+  
+  // Colores Primarios - Elegancia Apple
+  --color-primary: #1d1d1f;                 // Negro carbón premium
+  --color-primary-light: #424245;           // Gris antracita
+  --color-primary-dark: #000000;            // Negro absoluto
+  
+  // Colores de Acento - Azul inteligente
+  --color-accent: #007AFF;                  // Azul iOS perfecto
+  --color-accent-light: #5AC8FA;            // Azul cielo
+  --color-accent-dark: #0051D5;             // Azul profundo
+  --color-accent-ultra-light: rgba(0, 122, 255, 0.1);
+  
+  // Superficies y Fondos - Limpieza absoluta
+  --color-background: #fafafa;              // Gris humo ultraclaro
+  --color-background-secondary: #f5f5f7;    // Gris plata sutil
+  --color-surface: #ffffff;                 // Blanco puro
+  --color-surface-elevated: #ffffff;        // Blanco elevado
+  --color-surface-overlay: rgba(255, 255, 255, 0.95);
+  
+  // Sidebar - Elegancia lateral
+  --color-sidebar: #ffffff;                 // Blanco inmaculado
+  --color-sidebar-hover: #f5f5f7;           // Hover sutil
+  --color-sidebar-active: rgba(0, 122, 255, 0.08);
+  
+  // Textos - Jerarquía cristalina
+  --color-text-primary: #1d1d1f;            // Negro principal
+  --color-text-secondary: #86868b;          // Gris medio
+  --color-text-tertiary: #c7c7cc;           // Gris claro
+  --color-text-quaternary: #f2f2f7;         // Gris ultra claro
+  --color-text-inverse: #ffffff;            // Blanco contraste
+  --color-text-link: #007AFF;               // Enlaces azul
+  --color-text-link-hover: #0051D5;         // Enlaces hover
+  
+  // Bordes - Sutileza extrema
+  --color-border: #e5e5ea;                  // Borde principal
+  --color-border-light: #f2f2f7;            // Borde sutil
+  --color-border-medium: #d1d1d6;           // Borde medio
+  --color-border-focus: #007AFF;            // Borde focus
+  
+  // Estados Semánticos - Comunicación clara
+  --color-success: #30d158;                 // Verde iOS
+  --color-success-light: rgba(48, 209, 88, 0.1);
+  --color-warning: #ff9f0a;                 // Naranja iOS
+  --color-warning-light: rgba(255, 159, 10, 0.1);
+  --color-error: #ff3b30;                   // Rojo iOS
+  --color-error-light: rgba(255, 59, 48, 0.1);
+  --color-info: #007AFF;                    // Azul info
+  --color-info-light: rgba(0, 122, 255, 0.1);
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // SISTEMA DE ESPACIADO 8PX
+  // ══════════════════════════════════════════════════════════════════════════════
+  --spacing-xs: 4px;       // 0.5 × base
+  --spacing-sm: 8px;       // 1 × base  
+  --spacing-md: 16px;      // 2 × base
+  --spacing-lg: 24px;      // 3 × base
+  --spacing-xl: 32px;      // 4 × base
+  --spacing-2xl: 48px;     // 6 × base
+  --spacing-3xl: 64px;     // 8 × base
+  --spacing-4xl: 96px;     // 12 × base
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // BORDER RADIUS - SUAVIDAD PERFECTA
+  // ══════════════════════════════════════════════════════════════════════════════
+  --radius-xs: 4px;        // Mínimo
+  --radius-sm: 6px;        // Pequeño
+  --radius-md: 8px;        // Medio
+  --radius-lg: 12px;       // Grande
+  --radius-xl: 16px;       // Extra grande
+  --radius-2xl: 20px;      // Cards principales
+  --radius-3xl: 24px;      // Elementos hero
+  --radius-full: 9999px;   // Circular
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // SOMBRAS SUTILES - PROFUNDIDAD INTELIGENTE
+  // ══════════════════════════════════════════════════════════════════════════════
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.03), 0 2px 4px rgba(0, 0, 0, 0.02);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.04), 0 4px 6px rgba(0, 0, 0, 0.02);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.05), 0 10px 10px rgba(0, 0, 0, 0.02);
+  --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.06);
+  --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+  
+  // Sombras coloreadas
+  --shadow-accent: 0 4px 14px rgba(0, 122, 255, 0.15);
+  --shadow-success: 0 4px 14px rgba(48, 209, 88, 0.15);
+  --shadow-error: 0 4px 14px rgba(255, 59, 48, 0.15);
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // Z-INDEX LAYERS - JERARQUÍA ESPACIAL
+  // ══════════════════════════════════════════════════════════════════════════════
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+  --z-toast: 1080;
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // TRANSICIONES FLUIDAS
+  // ══════════════════════════════════════════════════════════════════════════════
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+// ================================================================================
+// RESET Y BASE STYLES
+// ================================================================================
+
+html, body { 
+  height: 100%; 
+  margin: 0; 
+  padding: 0;
+}
+
+body { 
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  color: var(--color-text-primary);
+  background-color: var(--color-background);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+// ================================================================================
+// COMPONENTES BASE GLOBALES
+// ================================================================================
+
+// Cards elegantes
+.app-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--color-border-light);
+  padding: var(--spacing-lg);
+  transition: var(--transition-base);
+  
+  &:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-1px);
+  }
+}
+
+// Botones refinados
+.app-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-lg);
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-tight);
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition-base);
+  min-height: 44px; // Touch target mínimo
+  
+  &:focus {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  // Variantes
+  &.primary {
+    background: var(--color-accent);
+    color: var(--color-text-inverse);
+    box-shadow: var(--shadow-accent);
+    
+    &:hover:not(:disabled) {
+      background: var(--color-accent-dark);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-lg);
+    }
+  }
+  
+  &.secondary {
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
+    
+    &:hover:not(:disabled) {
+      background: var(--color-background-secondary);
+      border-color: var(--color-border-medium);
+      transform: translateY(-1px);
+    }
+  }
+  
+  &.ghost {
+    background: transparent;
+    color: var(--color-text-secondary);
+    
+    &:hover:not(:disabled) {
+      background: var(--color-background-secondary);
+      color: var(--color-text-primary);
+    }
+  }
+}
+
+// Inputs elegantes
+.app-input {
+  width: 100%;
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  transition: var(--transition-base);
+  
+  &:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px var(--color-accent-ultra-light);
+  }
+  
+  &::placeholder {
+    color: var(--color-text-tertiary);
+  }
+}
+
+// Loading spinner minimalista
+.app-loading {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--color-border-light);
+  border-top: 2px solid var(--color-accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Utilidades de texto
+.text-primary { color: var(--color-text-primary); }
+.text-secondary { color: var(--color-text-secondary); }
+.text-tertiary { color: var(--color-text-tertiary); }
+.text-accent { color: var(--color-accent); }
+.text-success { color: var(--color-success); }
+.text-warning { color: var(--color-warning); }
+.text-error { color: var(--color-error); }
+
+// Utilidades de tipografía
+.font-light { font-weight: var(--font-weight-light); }
+.font-regular { font-weight: var(--font-weight-regular); }
+.font-medium { font-weight: var(--font-weight-medium); }
+.font-semibold { font-weight: var(--font-weight-semibold); }
+.font-bold { font-weight: var(--font-weight-bold); }
+
+.text-xs { font-size: var(--font-size-xs); }
+.text-sm { font-size: var(--font-size-sm); }
+.text-base { font-size: var(--font-size-base); }
+.text-md { font-size: var(--font-size-md); }
+.text-lg { font-size: var(--font-size-lg); }
+.text-xl { font-size: var(--font-size-xl); }
+.text-2xl { font-size: var(--font-size-2xl); }
+.text-3xl { font-size: var(--font-size-3xl); }
+
+// Utilidades de espaciado
+.p-xs { padding: var(--spacing-xs); }
+.p-sm { padding: var(--spacing-sm); }
+.p-md { padding: var(--spacing-md); }
+.p-lg { padding: var(--spacing-lg); }
+.p-xl { padding: var(--spacing-xl); }
+
+.m-xs { margin: var(--spacing-xs); }
+.m-sm { margin: var(--spacing-sm); }
+.m-md { margin: var(--spacing-md); }
+.m-lg { margin: var(--spacing-lg); }
+.m-xl { margin: var(--spacing-xl); }
+
+// ================================================================================
+// RESPONSIVE BREAKPOINTS
+// ================================================================================
+
+// Mobile first approach
+@mixin mobile-only {
+  @media (max-width: 767px) { @content; }
+}
+
+@mixin tablet-up {
+  @media (min-width: 768px) { @content; }
+}
+
+@mixin desktop-up {
+  @media (min-width: 1024px) { @content; }
+}
+
+@mixin large-up {
+  @media (min-width: 1280px) { @content; }
+}
+
+// ================================================================================
+// DARK MODE PREPARACIÓN
+// ================================================================================
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    // Se implementará en fase posterior
+    // --color-background: #000000;
+    // --color-surface: #1c1c1e;
+    // etc...
+  }
+}
+
+// ================================================================================
+// IMPRESIÓN
+// ================================================================================
+
+@media print {
+  :root {
+    --shadow-xs: none;
+    --shadow-sm: none;
+    --shadow-md: none;
+    --shadow-lg: none;
+    --shadow-xl: none;
+    --shadow-2xl: none;
+  }
+  
+  .app-card {
+    box-shadow: none;
+    border: 1px solid var(--color-border);
+  }
+}

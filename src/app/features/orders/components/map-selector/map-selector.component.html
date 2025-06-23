@@ -1,0 +1,42 @@
+<div class="map-selector-container">
+    <!-- Controles del mapa -->
+    <div class="map-controls">
+    <button 
+        mat-mini-fab 
+        color="primary"
+        (click)="centerMap()"
+        matTooltip="Centrar en Lima"
+        class="map-control-btn">
+        <mat-icon>my_location</mat-icon>
+    </button>
+    
+    <button 
+        mat-mini-fab 
+        color="accent"
+        (click)="clearMarkers()"
+        matTooltip="Limpiar marcadores"
+        class="map-control-btn">
+        <mat-icon>clear</mat-icon>
+    </button>
+
+    <!-- Indicador de modo -->
+    <div class="mode-indicator">
+        <span class="mode-text">{{ getCurrentModeText() }}</span>
+    </div>
+    </div>
+
+    <!-- Contenedor del mapa -->
+    <div #mapContainer class="map-container"></div>
+
+    <!-- Leyenda -->
+    <div class="map-legend">
+    <div class="legend-item">
+        <div class="legend-marker origin"></div>
+        <span>Origen</span>
+    </div>
+    <div class="legend-item">
+        <div class="legend-marker destination"></div>
+        <span>Destino</span>
+    </div>
+    </div>
+</div>

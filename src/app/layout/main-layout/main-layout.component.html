@@ -1,0 +1,44 @@
+<div class="app-layout">
+  <!-- Header con mejor estructura -->
+  <mat-toolbar class="app-header" color="primary">
+    <app-header (menuToggle)="toggleSidenav()"></app-header>
+  </mat-toolbar>
+
+  <!-- Container principal con sidenav -->
+  <mat-sidenav-container class="app-sidenav-container" hasBackdrop="false">
+    <!-- Sidebar con z-index corregido -->
+    <mat-sidenav
+      #drawer
+      class="app-sidenav"
+      [opened]="sidenavOpened"
+      [mode]="sidenavMode"
+      [disableClose]="sidenavMode === 'side'"
+      [style.z-index]="sidenavMode === 'over' ? 'var(--z-modal)' : 'var(--z-dropdown)'">
+      <app-sidebar></app-sidebar>
+    </mat-sidenav>
+
+    <!-- Contenido principal -->
+    <mat-sidenav-content class="app-main-content">
+      <div class="app-content-wrapper">
+        <!-- Loading overlay (se activará con el estado global) -->
+        <div class="app-loading-overlay" *ngIf="isLoading">
+          <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <span class="loading-text">Cargando...</span>
+          </div>
+        </div>
+        
+        <!-- Router outlet para el contenido -->
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+
+  <!-- Backdrop móvil corregido -->
+  <!--div 
+    class="app-sidenav-backdrop"
+    [class.show]="sidenavOpened && sidenavMode === 'over'"
+    (click)="closeSidenav()"
+    aria-label="Cerrar menú de navegación">
+  </div!-->
+</div>

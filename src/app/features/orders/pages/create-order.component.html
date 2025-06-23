@@ -1,0 +1,408 @@
+
+<div class="create-order-container">
+  <!-- Header -->
+  <div class="create-order-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        <mat-icon class="title-icon">add_shopping_cart</mat-icon>
+        Nueva Orden de Despacho
+      </h1>
+      <p class="page-subtitle">
+        Complete la información requerida para generar una nueva orden de despacho
+      </p>
+    </div>
+    
+    <div class="header-actions">
+      <button 
+        mat-stroked-button 
+        color="accent"
+        (click)="onCancel()"
+        class="action-btn">
+        <mat-icon>arrow_back</mat-icon>
+        Volver a Órdenes
+      </button>
+    </div>
+  </div>
+
+  <!-- GUARD: Solo mostrar si el formulario está listo -->
+  <div *ngIf="isFormReady; else loadingForm">
+    <!-- Stepper -->
+    <mat-horizontal-stepper 
+      [selectedIndex]="currentStep" 
+      class="order-stepper"
+      #stepper>
+      <form [formGroup]="orderForm" class="order-form" *ngIf="orderForm">
+      <!-- Paso 1: Información Básica -->
+      <mat-step [completed]="customerIdControl?.valid && productIdControl?.valid && quantityControl?.valid">
+        <ng-template matStepLabel>Información Básica</ng-template>
+        
+        <div class="step-content">
+          <mat-card class="form-card">
+            <mat-card-header>
+              <mat-icon mat-card-avatar>person</mat-icon>
+              <mat-card-title>Detalles de la Orden</mat-card-title>
+              <mat-card-subtitle>Seleccione cliente, producto y cantidad</mat-card-subtitle>
+            </mat-card-header>
+            
+            <mat-card-content class="order-form">
+              <!-- GUARD: Verificar que orderForm existe antes de usar -->
+              
+                <div class="form-row">
+                  <!-- Cliente -->
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Cliente</mat-label>
+                    <mat-select formControlName="customerId" required>
+                      <mat-option value="">Seleccionar cliente</mat-option>
+                      <mat-option 
+                        *ngFor="let customer of customers; trackBy: trackByCustomerId" 
+                        [value]="customer.id">
+                        {{ customer.name }}
+                        <span class="customer-email">({{ customer.email }})</span>
+                      </mat-option>
+                    </mat-select>
+                    <mat-icon matSuffix>person</mat-icon>
+                    <!-- GUARD: Verificar que el control existe -->
+                    <mat-error *ngIf="customerIdControl?.hasError('required')">
+                      Debe seleccionar un cliente
+                    </mat-error>
+                  </mat-form-field>
+
+                  <!-- Producto -->
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Producto</mat-label>
+                    <mat-select formControlName="productId" required>
+                      <mat-option value="">Seleccionar producto</mat-option>
+                      <mat-option 
+                        *ngFor="let product of products; trackBy: trackByProductId" 
+                        [value]="product.id">
+                        {{ product.name }}
+                        <span class="product-price">${{ product.unitPrice }}</span>
+                      </mat-option>
+                    </mat-select>
+                    <mat-icon matSuffix>inventory</mat-icon>
+                    <!-- GUARD: Verificar que el control existe -->
+                    <mat-error *ngIf="productIdControl?.hasError('required')">
+                      Debe seleccionar un producto
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-row">
+                  <!-- Cantidad -->
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Cantidad</mat-label>
+                    <input 
+                      matInput 
+                      type="number" 
+                      formControlName="quantity"
+                      [min]="QUANTITY_LIMITS.min"
+                      [max]="QUANTITY_LIMITS.max"
+                      required>
+                    <mat-icon matSuffix>shopping_cart</mat-icon>
+                    <mat-hint>Mín: {{ QUANTITY_LIMITS.min }}, Máx: {{ QUANTITY_LIMITS.max }}</mat-hint>
+                    <!-- GUARD: Verificar que el control existe -->
+                    <mat-error *ngIf="quantityControl?.hasError('required')">
+                      La cantidad es requerida
+                    </mat-error>
+                    <mat-error *ngIf="quantityControl?.hasError('min')">
+                      La cantidad mínima es {{ QUANTITY_LIMITS.min }}
+                    </mat-error>
+                    <mat-error *ngIf="quantityControl?.hasError('max')">
+                      La cantidad máxima es {{ QUANTITY_LIMITS.max }}
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <!-- Errores de validación generales -->
+                <div class="validation-errors" *ngIf="validationErrors.length > 0">
+                  <mat-icon color="warn">warning</mat-icon>
+                  <div class="errors-list">
+                    <div *ngFor="let error of validationErrors" class="error-item">
+                      {{ error }}
+                    </div>
+                  </div>
+                </div>
+            </mat-card-content>
+            
+            <mat-card-actions class="step-actions">
+              <button 
+                mat-raised-button 
+                color="primary"
+                (click)="stepper.next()"
+                [disabled]="!customerIdControl?.valid || !productIdControl?.valid || !quantityControl?.valid">
+                <mat-icon>arrow_forward</mat-icon>
+                Siguiente: Ubicaciones
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </mat-step>
+
+      <!-- Paso 2: Ubicaciones -->
+      <mat-step [completed]="(originGroup != null && originGroup.valid) && (destinationGroup != null && destinationGroup.valid)">
+        <ng-template matStepLabel>Ubicaciones</ng-template>
+        
+        <div class="step-content">
+          <mat-card class="form-card">
+            <mat-card-header>
+              <mat-icon mat-card-avatar>place</mat-icon>
+              <mat-card-title>Ubicaciones de Origen y Destino</mat-card-title>
+              <mat-card-subtitle>Configure las coordenadas de recogida y entrega</mat-card-subtitle>
+            </mat-card-header>
+            
+            <mat-card-content>
+              <!-- GUARD: Verificar que los FormGroups existen -->
+              <div class="locations-grid" *ngIf="originGroup && destinationGroup">
+                <!-- Panel de Coordenadas -->
+                <div class="coordinates-panel">
+                  <h3 class="panel-title">
+                    <mat-icon>edit_location</mat-icon>
+                    Coordenadas Manuales
+                  </h3>
+                  
+                  <!-- Origen -->
+                  <div class="coordinate-section" formGroupName="origin">
+                    <h4 class="section-title">
+                      <mat-icon class="location-icon origin">place</mat-icon>
+                      Origen (Recogida)
+                    </h4>
+                    
+                    <div class="coordinate-inputs">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Latitud</mat-label>
+                        <input matInput formControlName="latitude" placeholder="-12.0464">
+                        <mat-icon matSuffix>my_location</mat-icon>
+                        <!-- GUARD: Verificar que el control existe -->
+                        <mat-error *ngIf="originGroup?.get('latitude')?.hasError('required')">
+                          Latitud requerida
+                        </mat-error>
+                        <mat-error *ngIf="originGroup?.get('latitude')?.hasError('invalidCoordinate')">
+                          Coordenada inválida
+                        </mat-error>
+                      </mat-form-field>
+                      
+                      <mat-form-field appearance="outline">
+                        <mat-label>Longitud</mat-label>
+                        <input matInput formControlName="longitude" placeholder="-77.0428">
+                        <mat-icon matSuffix>my_location</mat-icon>
+                        <!-- GUARD: Verificar que el control existe -->
+                        <mat-error *ngIf="originGroup?.get('longitude')?.hasError('required')">
+                          Longitud requerida
+                        </mat-error>
+                        <mat-error *ngIf="originGroup?.get('longitude')?.hasError('invalidCoordinate')">
+                          Coordenada inválida
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <mat-divider></mat-divider>
+
+                  <!-- Destino -->
+                  <div class="coordinate-section" formGroupName="destination">
+                    <h4 class="section-title">
+                      <mat-icon class="location-icon destination">flag</mat-icon>
+                      Destino (Entrega)
+                    </h4>
+                    
+                    <div class="coordinate-inputs">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Latitud</mat-label>
+                        <input matInput formControlName="latitude" placeholder="-12.0464">
+                        <mat-icon matSuffix>my_location</mat-icon>
+                        <!-- GUARD: Verificar que el control existe -->
+                        <mat-error *ngIf="destinationGroup?.get('latitude')?.hasError('required')">
+                          Latitud requerida
+                        </mat-error>
+                        <mat-error *ngIf="destinationGroup?.get('latitude')?.hasError('invalidCoordinate')">
+                          Coordenada inválida
+                        </mat-error>
+                      </mat-form-field>
+                      
+                      <mat-form-field appearance="outline">
+                        <mat-label>Longitud</mat-label>
+                        <input matInput formControlName="longitude" placeholder="-77.0428">
+                        <mat-icon matSuffix>my_location</mat-icon>
+                        <!-- GUARD: Verificar que el control existe -->
+                        <mat-error *ngIf="destinationGroup?.get('longitude')?.hasError('required')">
+                          Longitud requerida
+                        </mat-error>
+                        <mat-error *ngIf="destinationGroup?.get('longitude')?.hasError('invalidCoordinate')">
+                          Coordenada inválida
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <!-- Ciudades Predefinidas -->
+                  <div class="cities-section">
+                    <h4 class="section-title">
+                      <mat-icon>location_city</mat-icon>
+                      Ciudades Frecuentes
+                    </h4>
+                    
+                    <div class="city-chips">
+                      <mat-chip-listbox class="city-chip-list">
+                        <mat-chip-option class="city-chip" (click)="setLimaCoordinates('origin')">
+                          Lima Centro (Origen)
+                        </mat-chip-option>
+                        <mat-chip-option class="city-chip" (click)="setLimaCoordinates('destination')">
+                          Lima Centro (Destino)
+                        </mat-chip-option>
+                        <mat-chip-option class="city-chip" (click)="setCallaoCoordinates('origin')">
+                          Callao (Origen)
+                        </mat-chip-option>
+                        <mat-chip-option class="city-chip" (click)="setCallaoCoordinates('destination')">
+                          Callao (Destino)
+                        </mat-chip-option>
+                        <mat-chip-option class="city-chip" (click)="setMirafloresCoordinates('origin')">
+                          Miraflores (Origen)
+                        </mat-chip-option>
+                        <mat-chip-option class="city-chip" (click)="setMirafloresCoordinates('destination')">
+                          Miraflores (Destino)
+                        </mat-chip-option>
+                        <mat-chip-option class="city-chip" (click)="setSanIsidroCoordinates('origin')">
+                          San Isidro (Origen)
+                        </mat-chip-option>
+                        <mat-chip-option class="city-chip" (click)="setSanIsidroCoordinates('destination')">
+                          San Isidro (Destino)
+                        </mat-chip-option>
+                      </mat-chip-listbox>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Panel del Mapa -->
+                <div class="map-panel">
+                  <app-map-selector
+                    [origin]="originGroup?.value"
+                    [destination]="destinationGroup?.value">
+                  </app-map-selector>
+                </div>
+              </div>
+
+              <!-- Cálculos de Distancia y Costo -->
+              <div class="calculations" *ngIf="calculatedDistance !== null">
+                <mat-divider></mat-divider>
+                
+                <div class="calculation-grid">
+                  <div class="calculation-item">
+                    <mat-icon>straighten</mat-icon>
+                    <div class="calculation-details">
+                      <span class="calculation-label">Distancia</span>
+                      <span class="calculation-value">{{ calculatedDistance }} km</span>
+                    </div>
+                  </div>
+                  
+                  <div class="calculation-item">
+                    <mat-icon>schedule</mat-icon>
+                    <div class="calculation-details">
+                      <span class="calculation-label">Intervalo</span>
+                      <span class="calculation-value">{{ distanceInterval }}</span>
+                    </div>
+                  </div>
+                  
+                  <div class="calculation-item">
+                    <mat-icon>attach_money</mat-icon>
+                    <div class="calculation-details">
+                      <span class="calculation-label">Costo Envío</span>
+                      <span class="calculation-value">${{ calculatedCost }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+            
+            <mat-card-actions class="step-actions">
+              <button 
+                mat-stroked-button 
+                (click)="stepper.previous()">
+                <mat-icon>arrow_back</mat-icon>
+                Anterior
+              </button>
+              
+              <button 
+                mat-raised-button 
+                color="primary"
+                (click)="stepper.next()"
+                [disabled]="!(originGroup != null && originGroup.valid) || !(destinationGroup != null && destinationGroup.valid)">
+                <mat-icon>arrow_forward</mat-icon>
+                Siguiente: Resumen
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </mat-step>
+
+      <!-- Paso 3: Resumen y Confirmación -->
+      <mat-step>
+        <ng-template matStepLabel>Confirmación</ng-template>
+        
+        <div class="step-content">
+          <mat-card class="form-card">
+            <mat-card-header>
+              <mat-icon mat-card-avatar>receipt</mat-icon>
+              <mat-card-title>Resumen de la Orden</mat-card-title>
+              <mat-card-subtitle>Revise y confirme los detalles antes de crear la orden</mat-card-subtitle>
+            </mat-card-header>
+            
+            <mat-card-content>
+              <!-- GUARD: Verificar que los datos existen -->
+              <app-order-summary
+                *ngIf="orderForm && customers.length > 0 && products.length > 0"
+                [customerName]="getSelectedCustomerName()"
+                [product]="getSelectedProduct()"
+                [quantity]="quantityControl?.value || 0"
+                [origin]="originGroup?.value"
+                [destination]="destinationGroup?.value"
+                [distance]="calculatedDistance"
+                [distanceInterval]="distanceInterval"
+                [shippingCost]="calculatedCost"
+                [total]="getOrderTotal()">
+              </app-order-summary>
+
+              <!-- Estado de validación -->
+              <div class="form-status" [class.valid]="isFormValid" [class.invalid]="!isFormValid">
+                <mat-icon>{{ isFormValid ? 'check_circle' : 'error' }}</mat-icon>
+                <span>{{ isFormValid ? 'Formulario válido' : 'Revise los errores indicados' }}</span>
+              </div>
+            </mat-card-content>
+            
+            <mat-card-actions class="step-actions">
+              <button 
+                mat-stroked-button 
+                (click)="stepper.previous()">
+                <mat-icon>arrow_back</mat-icon>
+                Anterior
+              </button>
+              
+              <button 
+                mat-raised-button 
+                color="primary"
+                class="primary-action"
+                (click)="onSubmit()"
+                [disabled]="!isFormValid || isSubmitting">
+                <mat-progress-spinner 
+                  *ngIf="isSubmitting" 
+                  class="spinner" 
+                  diameter="20">
+                </mat-progress-spinner>
+                <mat-icon *ngIf="!isSubmitting">save</mat-icon>
+                {{ isSubmitting ? 'Creando Orden...' : 'Crear Orden' }}
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </mat-step>
+      </form>
+    </mat-horizontal-stepper>
+  </div>
+
+  <!-- Loading Template -->
+  <ng-template #loadingForm>
+    <div class="loading-container">
+      <mat-progress-spinner diameter="50"></mat-progress-spinner>
+      <p>Inicializando formulario...</p>
+    </div>
+  </ng-template>
+</div>

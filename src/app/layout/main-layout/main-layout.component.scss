@@ -1,0 +1,246 @@
+
+// ================================================================================
+// MAIN LAYOUT COMPONENT - JONATHAN IVE ORCHESTRATION
+// "Design is not just what it looks like, but how it works"
+// ================================================================================
+app-main-layout{
+  .app-layout {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    font-family: var(--font-family);
+    background: var(--color-background);
+    position: relative;
+    
+    // Preparación para animaciones de página
+    &.page-transition {
+      overflow: hidden;
+    }
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // HEADER PRINCIPAL - ELEGANCIA EN LA CIMA
+  // ══════════════════════════════════════════════════════════════════════════════
+
+  .app-header {
+    position: relative;
+    z-index: var(--z-fixed);
+    flex-shrink: 0;
+    background: var(--color-primary);
+    border: none !important; // Override Material default
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 
+                0 1px 2px rgba(0, 0, 0, 0.04) !important;
+    
+    // Gradiente sutil para profundidad
+    background: linear-gradient(135deg, 
+      var(--color-primary) 0%, 
+      var(--color-primary-light) 100%
+    );
+    
+    // Línea inferior sutil
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(255, 255, 255, 0.1) 50%, 
+        transparent 100%
+      );
+    }
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // CONTAINER DEL SIDENAV - ARMONÍA ESTRUCTURAL
+  // ══════════════════════════════════════════════════════════════════════════════
+
+  .app-sidenav-container {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    background: var(--color-background);
+    position: relative;
+  }
+
+  .mat-sidenav-content.app-main-content {
+    margin-left: 0 !important;
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // SIDEBAR - NAVEGACIÓN ELEGANTE
+  // ══════════════════════════════════════════════════════════════════════════════
+
+  .app-sidenav {
+    width: 280px !important;
+    background: var(--color-sidebar) !important;
+    border-right: 1px solid var(--color-border-light) !important;
+    box-shadow: none !important;
+    position: relative;
+    z-index: calc(var(--z-dropdown) + 1); // CRÍTICO: Siempre por encima del backdrop
+    
+    // Responsive
+    @media (max-width: 768px) {
+      width: 100vw !important;
+      max-width: 320px !important;
+      z-index: calc(var(--z-modal) + 1) !important; // CRÍTICO: En móvil, más alto aún
+    }
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // CONTENIDO PRINCIPAL - CANVAS INMACULADO
+  // ══════════════════════════════════════════════════════════════════════════════
+
+  mat-sidenav-content {
+    width: 100%;
+    transition: all var(--transition-base);
+
+    .app-main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--color-background);
+      position: relative;
+    }
+
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // LOADING OVERLAY - ELEGANCIA EN LA ESPERA
+  // ══════════════════════════════════════════════════════════════════════════════
+
+  .app-loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: var(--z-modal);
+    
+    .loading-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-lg);
+      padding: var(--spacing-xl);
+      background: var(--color-surface);
+      border-radius: var(--radius-2xl);
+      box-shadow: var(--shadow-xl);
+      border: 1px solid var(--color-border-light);
+      
+      .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid var(--color-border-light);
+        border-top: 3px solid var(--color-accent);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      
+      .loading-text {
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-medium);
+        color: var(--color-text-secondary);
+        letter-spacing: var(--letter-spacing-wide);
+      }
+    }
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // RESPONSIVE DESIGN - ADAPTACIÓN INTELIGENTE
+  // ══════════════════════════════════════════════════════════════════════════════
+
+  @media (max-width: 768px) {
+    .mat-drawer:not(.mat-drawer-opened):not(.mat-drawer-animating){
+      display: none !important;
+    }
+
+    .app-sidenav {
+      width: 100vw !important; // Ancho completo en móvil
+      max-width: 320px !important; // Pero con límite máximo
+      z-index: var(--z-modal) !important; // CRÍTICO: Por encima del backdrop
+    }
+    
+    .app-sidenav-backdrop {
+      top: 64px; // Altura del header móvil
+    }
+    
+    .app-content-wrapper {
+      &::before,
+      &::after {
+        left: 0 !important; // Sin offset del sidebar
+      }
+    }
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // ANIMACIONES SUTILES
+  // ══════════════════════════════════════════════════════════════════════════════
+
+  .app-sidenav {
+    transition: transform var(--transition-base) cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // DARK MODE PREPARATION
+  // ══════════════════════════════════════════════════════════════════════════════
+
+  @media (prefers-color-scheme: dark) {
+    .app-loading-overlay {
+      background: rgba(0, 0, 0, 0.95);
+    }
+    
+    .app-sidenav-backdrop {
+      background: rgba(0, 0, 0, 0.6);
+    }
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // ESTADOS DE ACCESIBILIDAD
+  // ══════════════════════════════════════════════════════════════════════════════
+
+  @media (prefers-reduced-motion: reduce) {
+    .app-sidenav,
+    .app-sidenav-backdrop,
+    .loading-spinner {
+      transition: none;
+      animation: none;
+    }
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // PRINT STYLES
+  // ══════════════════════════════════════════════════════════════════════════════
+
+  @media print {
+    .app-sidenav,
+    .app-sidenav-backdrop,
+    .app-loading-overlay {
+      display: none !important;
+    }
+    
+    .app-content-wrapper {
+      padding: 0 !important;
+      
+      &::before,
+      &::after {
+        display: none !important;
+      }
+    }
+  }
+}

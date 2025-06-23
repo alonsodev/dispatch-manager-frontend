@@ -1,0 +1,49 @@
+<div class="app-sidebar-content">
+  <div class="app-sidebar-header">
+    <span class="app-sidebar-title">Navegación</span>
+  </div>
+
+  <nav class="app-nav">
+    <div class="app-nav-section">
+      <ng-container *ngFor="let item of menuItems; trackBy: trackByRoute">
+        <a 
+          [routerLink]="item.route"
+          [class.active]="isActiveRoute(item.route)"
+          class="app-nav-item"
+          [attr.aria-label]="item.label">
+          
+          <div class="app-nav-item-content">
+            <mat-icon class="app-nav-icon">{{ item.icon }}</mat-icon>
+            <span class="app-nav-label">{{ item.label }}</span>
+          </div>
+          
+          <div class="app-nav-indicator" *ngIf="isActiveRoute(item.route)"></div>
+        </a>
+        
+        <!-- Sub-items si existen -->
+        <div class="app-nav-submenu" *ngIf="item.children && isActiveRoute(item.route)">
+          <a 
+            *ngFor="let child of item.children; trackBy: trackByRoute"
+            [routerLink]="child.route"
+            [class.active]="isActiveRoute(child.route)"
+            class="app-nav-subitem"
+            [attr.aria-label]="child.label">
+            
+            <mat-icon class="app-nav-subicon">{{ child.icon }}</mat-icon>
+            <span class="app-nav-sublabel">{{ child.label }}</span>
+          </a>
+        </div>
+      </ng-container>
+    </div>
+  </nav>
+
+  <div class="app-sidebar-footer">
+    <div class="app-version-info">
+      <mat-icon class="version-icon">info_outline</mat-icon>
+      <div class="version-details">
+        <span class="version-text">Versión 1.0.0</span>
+        <span class="build-text">Build 2024.1</span>
+      </div>
+    </div>
+  </div>
+</div>

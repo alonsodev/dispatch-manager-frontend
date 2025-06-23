@@ -1,0 +1,95 @@
+<div class="edit-order-container" *ngIf="order">
+    <!-- Header -->
+    <div class="edit-order-header">
+    <div class="header-content">
+        <h1 class="page-title">
+        <mat-icon class="title-icon">edit</mat-icon>
+        Editar Estado - Orden #{{ order.id.substring(0, 8) }}
+        </h1>
+        <p class="page-subtitle">
+        Actualice el estado de la orden de despacho
+        </p>
+    </div>
+    
+    <div class="header-actions">
+        <button 
+        mat-stroked-button 
+        (click)="goBack()"
+        class="action-btn">
+        <mat-icon>arrow_back</mat-icon>
+        Volver
+        </button>
+    </div>
+    </div>
+
+    <!-- Formulario -->
+    <mat-card class="edit-form-card">
+    <mat-card-header>
+        <mat-icon mat-card-avatar>assignment</mat-icon>
+        <mat-card-title>Actualizar Estado</mat-card-title>
+        <mat-card-subtitle>Seleccione el nuevo estado para la orden</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+        <form [formGroup]="editForm" (ngSubmit)="onSubmit()" class="edit-form">
+        <div class="current-status">
+            <h3>Estado Actual:</h3>
+            <mat-chip [class]="'status-chip status-' + order.status">
+            {{ getStatusLabel(order.status) }}
+            </mat-chip>
+        </div>
+
+        <mat-form-field class="status-field" appearance="outline">
+            <mat-label>Nuevo Estado</mat-label>
+            <mat-select formControlName="status" required>
+            <mat-option *ngFor="let status of availableStatuses" [value]="status.value">
+                {{ status.label }}
+            </mat-option>
+            </mat-select>
+            <mat-icon matSuffix>update</mat-icon>
+            <mat-error *ngIf="editForm.get('status')?.hasError('required')">
+            Debe seleccionar un estado
+            </mat-error>
+        </mat-form-field>
+
+        <div class="form-actions">
+            <button 
+            mat-stroked-button 
+            type="button"
+            (click)="goBack()"
+            class="cancel-btn">
+            <mat-icon>cancel</mat-icon>
+            Cancelar
+            </button>
+            
+            <button 
+            mat-raised-button 
+            color="primary"
+            type="submit"
+            [disabled]="editForm.invalid || isSubmitting"
+            class="submit-btn">
+            <mat-icon>check</mat-icon>
+            {{ isSubmitting ? 'Actualizando...' : 'Actualizar Estado' }}
+            </button>
+        </div>
+        </form>
+    </mat-card-content>
+    </mat-card>
+</div>
+
+<!-- Loading State -->
+<div *ngIf="!order && isLoading" class="loading-container">
+    <mat-icon class="loading-icon">hourglass_empty</mat-icon>
+    <p>Cargando orden...</p>
+</div>
+
+<!-- Error State -->
+<div *ngIf="!order && !isLoading" class="error-container">
+    <mat-icon class="error-icon">error_outline</mat-icon>
+    <h3>Orden no encontrada</h3>
+    <p>No se pudo cargar la orden para editar</p>
+    <button mat-raised-button color="primary" (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon>
+    Volver a Órdenes
+    </button>
+</div>

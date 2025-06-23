@@ -1,0 +1,61 @@
+<div class="app-header-content">
+  <!-- Sección izquierda: Hamburger + Logo -->
+  <div class="app-header-left">
+    <button 
+      mat-icon-button 
+      class="app-menu-btn" 
+      (click)="onMenuToggle()"
+      aria-label="Toggle navigation">
+      <mat-icon>menu</mat-icon>
+    </button>
+    
+    <div class="app-logo">
+      <mat-icon class="app-logo-icon">local_shipping</mat-icon>
+      <span class="app-logo-text">Dispatch Manager</span>
+    </div>
+  </div>
+
+  <!-- Sección derecha: Notificaciones + Usuario -->
+  <div class="app-header-right">
+    <button 
+      mat-icon-button 
+      class="app-cache-btn" 
+      (click)="onInvalidateCache()"
+      [disabled]="isCacheInvalidating"
+      aria-label="Invalidar caché">
+      <mat-icon class="cache-icon">cached</mat-icon>
+    </button>
+
+    <button mat-icon-button class="app-notification-btn" aria-label="Notificaciones">
+      <mat-icon>notifications_none</mat-icon>
+      <span class="app-notification-badge">3</span>
+    </button>
+
+    <button mat-button [matMenuTriggerFor]="userMenu" class="app-user-menu">
+      <div class="app-user-avatar">
+        <mat-icon>person_outline</mat-icon>
+      </div>
+      <div class="app-user-info">
+        <span class="app-user-name">{{ currentUser.name }}</span>
+        <span class="app-user-role">{{ currentUser.role }}</span>
+      </div>
+      <mat-icon class="app-dropdown-icon">expand_more</mat-icon>
+    </button>
+
+    <mat-menu #userMenu="matMenu" class="app-user-dropdown">
+      <button mat-menu-item (click)="onProfile()">
+        <mat-icon>person_outline</mat-icon>
+        <span>Mi Perfil</span>
+      </button>
+      <button mat-menu-item (click)="onSettings()">
+        <mat-icon>settings</mat-icon>
+        <span>Configuración</span>
+      </button>
+      <mat-divider></mat-divider>
+      <button mat-menu-item (click)="onLogout()" class="logout-item">
+        <mat-icon>logout</mat-icon>
+        <span>Cerrar Sesión</span>
+      </button>
+    </mat-menu>
+  </div>
+</div>

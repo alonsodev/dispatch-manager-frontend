@@ -1,0 +1,156 @@
+ <div class="order-summary-container">
+    <mat-card class="summary-card">
+    <mat-card-header>
+        <mat-icon mat-card-avatar>receipt_long</mat-icon>
+        <mat-card-title>Resumen de la Orden</mat-card-title>
+        <mat-card-subtitle>Verifique todos los datos antes de confirmar</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+        <!-- Información del Cliente -->
+        <div class="summary-section">
+        <h3 class="section-title">
+            <mat-icon>person</mat-icon>
+            Cliente
+        </h3>
+        <div class="section-content">
+            <p class="customer-name">{{ customerName }}</p>
+        </div>
+        </div>
+
+        <mat-divider class="section-divider"></mat-divider>
+
+        <!-- Información del Producto -->
+        <div class="summary-section" *ngIf="product">
+        <h3 class="section-title">
+            <mat-icon>inventory</mat-icon>
+            Producto
+        </h3>
+        <div class="section-content">
+            <div class="product-info">
+            <p class="product-name">{{ product.name }}</p>
+            <div class="product-details">
+                <span class="quantity">{{ quantity }} {{ product.unit }}</span>
+                <span class="unit-price">\${{ product.unitPrice | number:'1.2-2' }} c/u</span>
+                <span class="product-total">\${{ getProductTotal() | number:'1.2-2' }} total</span>
+            </div>
+            </div>
+        </div>
+        </div>
+
+        <mat-divider class="section-divider"></mat-divider>
+
+        <!-- Información de Ubicaciones -->
+        <div class="summary-section">
+        <h3 class="section-title">
+            <mat-icon>map</mat-icon>
+            Ruta de Despacho
+        </h3>
+        <div class="section-content">
+            <div class="location-info">
+            <div class="location-item origin">
+                <mat-icon class="location-icon">radio_button_checked</mat-icon>
+                <div class="location-details">
+                <span class="location-label">Origen</span>
+                <span class="coordinates">{{ formatCoordinate(origin) }}</span>
+                </div>
+            </div>
+
+            <div class="route-line"></div>
+
+            <div class="location-item destination">
+                <mat-icon class="location-icon">location_on</mat-icon>
+                <div class="location-details">
+                <span class="location-label">Destino</span>
+                <span class="coordinates">{{ formatCoordinate(destination) }}</span>
+                </div>
+            </div>
+            </div>
+        </div>
+        </div>
+
+        <mat-divider class="section-divider"></mat-divider>
+
+        <!-- Cálculos de Envío -->
+        <div class="summary-section">
+        <h3 class="section-title">
+            <mat-icon>local_shipping</mat-icon>
+            Detalles del Envío
+        </h3>
+        <div class="section-content">
+            <div class="shipping-info">
+            <div class="shipping-item">
+                <span class="shipping-label">Distancia:</span>
+                <span class="shipping-value">{{ distance | number:'1.2-2' }} km</span>
+            </div>
+            
+            <div class="shipping-item">
+                <span class="shipping-label">Intervalo:</span>
+                <mat-chip class="interval-chip">{{ distanceInterval }}</mat-chip>
+            </div>
+            
+            <div class="shipping-item">
+                <span class="shipping-label">Costo Envío:</span>
+                <span class="shipping-value shipping-cost">\${{ shippingCost | number:'1.2-2' }}</span>
+            </div>
+            </div>
+        </div>
+        </div>
+
+        <mat-divider class="section-divider"></mat-divider>
+
+        <!-- Total de la Orden -->
+        <div class="summary-section total-section">
+        <h3 class="section-title">
+            <mat-icon>calculate</mat-icon>
+            Total de la Orden
+        </h3>
+        <div class="section-content">
+            <div class="total-breakdown">
+            <div class="total-item">
+                <span class="total-label">Subtotal Productos:</span>
+                <span class="total-value">\${{ getProductTotal() | number:'1.2-2' }}</span>
+            </div>
+            
+            <div class="total-item">
+                <span class="total-label">Costo de Envío:</span>
+                <span class="total-value">\${{ shippingCost | number:'1.2-2' }}</span>
+            </div>
+            
+            <div class="total-item final-total">
+                <span class="total-label">Total Final:</span>
+                <span class="total-value final-amount">\${{ total | number:'1.2-2' }}</span>
+            </div>
+            </div>
+        </div>
+        </div>
+    </mat-card-content>
+    </mat-card>
+
+    <!-- Información Adicional -->
+    <mat-card class="info-card">
+    <mat-card-header>
+        <mat-icon mat-card-avatar>info</mat-icon>
+        <mat-card-title>Información Importante</mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content>
+        <div class="info-list">
+        <div class="info-item">
+            <mat-icon>schedule</mat-icon>
+            <span>El tiempo estimado de entrega es de 3-5 días hábiles</span>
+        </div>
+        
+        <div class="info-item">
+            <mat-icon>security</mat-icon>
+            <span>El envío incluye seguro contra pérdidas</span>
+        </div>
+        
+        <div class="info-item">
+            <mat-icon>track_changes</mat-icon>
+            <span>Recibirá un código de seguimiento por email</span>
+        </div>
+        </div>
+    </mat-card-content>
+    </mat-card>
+</div>
